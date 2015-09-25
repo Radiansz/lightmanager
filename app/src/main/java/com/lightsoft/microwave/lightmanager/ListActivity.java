@@ -18,12 +18,14 @@ import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.AdapterView.*;
 import android.widget.CursorAdapter;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.SimpleCursorAdapter;
 import android.util.Log;
 
 import com.lightsoft.microwave.lightmanager.dbworks.PurchaseLoader;
+import com.lightsoft.microwave.lightmanager.visualize.PurchaseAdapter;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -56,6 +58,7 @@ public class ListActivity extends Activity implements AdapterView.OnItemClickLis
         String []from = new String[]{"purchasename", "total", "place"};
         int []to = {R.id.pe_main, R.id.pe_price, R.id.pe_extra};
         adapter = new SimpleCursorAdapter(this, R.layout.purchase_list_elem, null,from, to, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
+        //adapter = new PurchaseAdapter(this, null, 200);
         lv.setAdapter(adapter);
         getLoaderManager().initLoader(0,null,this);
     }
@@ -186,6 +189,7 @@ public class ListActivity extends Activity implements AdapterView.OnItemClickLis
             if(b) {
                 String s = data.getString(data.getColumnIndex("purchasename"));
                 adapter.swapCursor(data);
+                //adapter.setCursor(data);
             }
         }
     }
