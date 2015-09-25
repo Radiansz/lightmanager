@@ -24,7 +24,6 @@ public class PurchaseAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        cnt.get
         return 0;
     }
 

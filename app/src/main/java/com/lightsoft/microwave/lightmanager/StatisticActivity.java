@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.CursorAdapter;
 import android.widget.EditText;
@@ -24,7 +25,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 
-public class StatisticActivity extends Activity {
+public class StatisticActivity extends Activity implements View.OnClickListener {
     DBHelper dbh;
     ListView lv;
     CursorAdapter adapter;
@@ -36,7 +37,7 @@ public class StatisticActivity extends Activity {
     TextView totalText;
 
     Button refreshButton;
-
+    long targetTime = -1;
     EditText amountEdit;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,11 +51,14 @@ public class StatisticActivity extends Activity {
         dayRadio = (RadioButton) findViewById(R.id.stat_day);
         amountEdit = (EditText) findViewById(R.id.amount);
         totalText = (TextView) findViewById(R.id.stat_total);
+        refreshButton = (Button) findViewById(R.id.stat_refresh);
+        refreshButton.setOnClickListener(this);
         String []from = new String[]{"purchasename", "sum", "extra"};
         int []to = {R.id.pe_main, R.id.pe_price, R.id.pe_extra};
         adapter = new SimpleCursorAdapter(this, R.layout.purchase_list_elem, null,from, to, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
         lv.setAdapter(adapter);
         refreshList();
+
     }
 
     private long calcTargetTime(){
@@ -64,11 +68,13 @@ public class StatisticActivity extends Activity {
 
     private void refreshList(){
         SQLiteDatabase db = dbh.getWritableDatabase();
-        long curTime,targetTime;
+        long curTime;
         GregorianCalendar calend = new GregorianCalendar();
         curTime = calend.getTimeInMillis();
-        calend.add(Calendar.YEAR, -1 );
-        targetTime = calend.getTimeInMillis();
+        if(targetTime == -1) {
+            calend.add(Calendar.YEAR, -1);
+            targetTime = calend.getTimeInMillis();
+        }
         Cursor cursor = db.query(Purchase.TABLE,
                 new String[]{"sum(" + Purchase.TOTAL + ") as sum"},
                 Purchase.DATE + " > " + targetTime + " AND " + Purchase.DATE + " < " + curTime,
@@ -116,5 +122,23 @@ public class StatisticActivity extends Activity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onClick(View v) {
+        GregorianCalendar calend = new GregorianCalendar();
+        String s = amountEdit.getText().toString();
+        int interval = Integer.parseInt(s);
+        if(yearRadio.isChecked())
+            calend.add(Calendar.YEAR, -1*interval);
+        if(monthRadio.isChecked())
+            calend.add(Calendar.MONTH, -1*interval);
+        if(weekRadio.isChecked())
+            calend.add(Calendar.DAY_OF_YEAR, -7*interval);
+        if(dayRadio.isChecked())
+            calend.add(Calendar.DAY_OF_YEAR, -1*interval);
+        targetTime = calend.getTimeInMillis();
+        refreshList();
+
     }
 }
