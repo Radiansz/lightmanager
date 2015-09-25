@@ -1,0 +1,61 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="0dp"
+    android:paddingRight="0dp"
+    android:paddingTop="0dp"
+    android:paddingBottom="0dp" tools:context=".ListActivity"
+    android:orientation="vertical">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+        android:layout_height="match_parent" android:paddingLeft="0dp"
+        android:paddingRight="0dp"
+        android:paddingTop="0dp"
+        android:paddingBottom="0dp" tools:context=".ListActivity"
+        android:orientation="vertical" android:layout_weight="0.05"
+        android:weightSum="10"
+        android:touchscreenBlocksFocus="true">
+        <ListView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/purchList"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_weight="1" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="9"
+            android:background="@color/local_res_color"
+            android:weightSum="10"
+            android:paddingLeft="@dimen/left_pad_list">
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/for_2_weeks"
+                android:id="@+id/static_sum"
+                android:phoneNumber="true"
+                android:textColor="@color/light_text_color"
+                android:layout_weight="3"
+                android:gravity="center_vertical" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="1000"
+                android:id="@+id/costs_sum_v"
+                android:textColor="@color/light_text_color"
+                android:layout_weight="7"
+                android:gravity="center" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</LinearLayout>

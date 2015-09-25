@@ -1,0 +1,50 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="3dp"
+    android:paddingRight="3dp"
+    android:paddingTop="3dp"
+    android:paddingBottom="3dp"
+    android:orientation="vertical"
+    tools:context="com.lightsoft.microwave.lightmanager.NewPurchase"
+    android:weightSum="1">
+
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/purchaseNameEdit"
+        android:singleLine="true"
+
+        style="@style/purchase_input"
+        android:minHeight="40dp" />
+
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="10"
+        android:id="@+id/totalPriceEdit"
+        style="@style/purchase_input"
+        android:minHeight="40dp"
+        android:layout_marginTop="10dp"/>
+
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textMultiLine"
+        android:ems="10"
+        android:id="@+id/detailsEdit"
+        android:layout_weight="0.23"
+
+        style="@style/purchase_input"
+        android:layout_marginTop="10dp" />
+
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:inputType="date"
+        android:ems="10"
+        android:id="@+id/dateEdit"
+        style="@style/purchase_input"
+        android:minHeight="40dp"
+        android:layout_marginTop="10dp"/>
+</LinearLayout>

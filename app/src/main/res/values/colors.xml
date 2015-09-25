@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="list_elem_color">#ffd8d8d8</color>
+    <color name="local_res_color">#ff7f7f7f</color>
+    <color name="text_color">#ff2c2c2c</color>
+    <color name="light_text_color">#ffeaeaea</color>
+    <color name="list_elem_sel_color">#ffc2c2c2</color>
+    <color name="input_usual">#ffe8e8e8</color>
+    <color name="input_focused">#ffd7d7d7</color>
+    <color name="pure_black">#ff000000</color>
+</resources>

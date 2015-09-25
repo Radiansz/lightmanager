@@ -1,0 +1,13 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" tools:context=".ListActivity">
+    <item android:id="@+id/new_task" android:title="@string/new_task"
+        android:orderInCategory="300" android:showAsAction="always" />
+    <item android:id="@+id/action_settings" android:title="@string/action_settings"
+        android:orderInCategory="200" android:showAsAction="never" />
+    <item android:id="@+id/temp_picker_set" android:title="@string/temp_picker"
+        android:orderInCategory="300" android:showAsAction="never" />
+    <item android:id="@+id/edit_rules_set" android:title="@string/edit_rules"
+        android:orderInCategory="300" android:showAsAction="never" />
+    <item android:id="@+id/statistic" android:title="@string/statistic"
+        android:orderInCategory="300" android:showAsAction="never" />
+</menu>

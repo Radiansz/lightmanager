@@ -1,0 +1,19 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+    </style>
+    <style name="listElem" >
+        <item name="android:background">@drawable/list_elem_selector</item>
+    </style>
+    <style name="purchase_input" parent="android:Widget.EditText">
+        <item name="android:background">@drawable/gray_input</item>
+    </style>
+    <style name="rules_maker_input" parent="android:Widget.EditText">
+        <item name="android:background">@drawable/gray_input</item>
+        <item name="android:layout_marginLeft">15px</item>
+        <item name="android:layout_marginRight">15px</item>
+        <item name="android:layout_marginTop">10px</item>
+    </style>
+</resources>

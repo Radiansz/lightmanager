@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTheme" parent="android:Theme.Material.Light">
+    </style>
+    <style name="purchase_input" parent="android:Widget.EditText">
+        <item name="android:background">@drawable/gray_input</item>
+    </style>
+    <style name="rules_maker_input" parent="android:Widget.EditText">
+        <item name="android:background">@drawable/gray_input</item>
+        <item name="android:paddingLeft">5px</item>
+        <item name="android:paddingRight">5px</item>
+    </style>
+</resources>
