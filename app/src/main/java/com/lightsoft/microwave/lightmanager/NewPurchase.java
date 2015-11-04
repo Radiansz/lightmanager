@@ -10,10 +10,12 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.util.Log;
 import android.widget.TextView;
 
+import com.lightsoft.microwave.lightmanager.dbworks.Account;
 import com.lightsoft.microwave.lightmanager.dbworks.TypesProvider;
 
 import java.util.Calendar;
@@ -33,10 +35,14 @@ public class NewPurchase extends Activity implements View.OnClickListener, TextV
     EditText detailsEdit;
     EditText dateEdit;
     EditText priceEdit;
+    DatePicker picker;
+    GregorianCalendar oldDate = null;
     ArrayList<Type> types;
     long id;
     boolean isEdit = false;
     String oldPName;
+    int oldPrice;
+    int newPrice;
     boolean neFocus = false;
 
     @Override
@@ -48,7 +54,7 @@ public class NewPurchase extends Activity implements View.OnClickListener, TextV
         dbh.getWritableDatabase();
         nameEdit = (EditText) findViewById(R.id.purchaseNameEdit);
         detailsEdit = (EditText) findViewById(R.id.detailsEdit);
-        dateEdit = (EditText) findViewById(R.id.dateEdit);
+        picker = (DatePicker) findViewById(R.id.datePicker);
         priceEdit = (EditText) findViewById(R.id.totalPriceEdit);
         nameEdit.setOnEditorActionListener(this);
         types = dbh.gainTypes("purchasetypes");
@@ -65,16 +71,17 @@ public class NewPurchase extends Activity implements View.OnClickListener, TextV
                 oldPName = c.getString(c.getColumnIndex("purchasename"));
                 nameEdit.setText(oldPName);
                 detailsEdit.setText(c.getString(c.getColumnIndex("comment")));
+                oldPrice = c.getInt(c.getColumnIndex("total"));
                 priceEdit.setText(c.getString(c.getColumnIndex("total")));
                 Date date = new Date(c.getLong(c.getColumnIndex("date")));
                 GregorianCalendar calend = new GregorianCalendar();
                 calend.setTime(date);
-                dateEdit.setText(calend.get(GregorianCalendar.DAY_OF_MONTH)+ "/" + (calend.get(GregorianCalendar.MONTH) + 1) +"/" + calend.get(GregorianCalendar.YEAR) );
+                picker.updateDate(calend.get(GregorianCalendar.YEAR), calend.get(GregorianCalendar.MONTH), calend.get(GregorianCalendar.DAY_OF_MONTH));
+                oldDate = calend;
             }
         }
-        else{
+        else {
             GregorianCalendar calend = new GregorianCalendar();
-            dateEdit.setText(calend.get(GregorianCalendar.DAY_OF_MONTH)+ "/" + (calend.get(GregorianCalendar.MONTH) + 1) + "/" + calend.get(GregorianCalendar.YEAR));
         }
 
     }
@@ -112,69 +119,48 @@ public class NewPurchase extends Activity implements View.OnClickListener, TextV
         return super.onOptionsItemSelected(item);
     }
 
-    void putToDB(){
+
+
+    private ContentValues makeCV() {
 
         String purchtype = nameEdit.getText().toString();
-        ContentValues cv;
-        TypesProvider tp = new TypesProvider(dbh, "purchasetypes");
-        tp.incrType(purchtype);
-
-        //dbh.incrType("purchasetypes", purchtype);
-
         String details = detailsEdit.getText().toString();
         int price = Integer.parseInt(priceEdit.getText().toString());
-        String tempDate = dateEdit.getText().toString();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        Date date = null;
-        try {
-            date = sdf.parse(tempDate);
-        }
-        catch (Exception e){
-            date = new Date();
-        }
-        GregorianCalendar calendar = new GregorianCalendar(), calendar1 = new GregorianCalendar();
-        calendar.setTime(date);
-        calendar.set(GregorianCalendar.HOUR_OF_DAY, calendar1.get(GregorianCalendar.HOUR_OF_DAY));
-        calendar.set(GregorianCalendar.MINUTE, calendar1.get(GregorianCalendar.MINUTE));
-        date = calendar.getTime();
+        newPrice = price;
+        GregorianCalendar today = new GregorianCalendar();
+        GregorianCalendar calendar;
+        if(oldDate == null)
+            calendar = new GregorianCalendar( picker.getYear(),  picker.getMonth(), picker.getDayOfMonth(),
+                    today.get(GregorianCalendar.HOUR_OF_DAY), today.get(GregorianCalendar.MINUTE), 0);
+        else
+            calendar = new GregorianCalendar( picker.getYear(),  picker.getMonth(), picker.getDayOfMonth(),
+                    oldDate.get(GregorianCalendar.HOUR_OF_DAY), oldDate.get(GregorianCalendar.MINUTE), 0);
+        Date date = calendar.getTime();
 
-        cv = new ContentValues();
+        ContentValues cv = new ContentValues();
         cv.put("purchasename", purchtype);
         cv.put("total", price);
-        cv.put("place", "default");
+        if(isEdit) cv.put("place", "default");
         cv.put("date", date.getTime());
         cv.put("comment", details);
-        cv.put("accountid", 0);
+        cv.put("accountid", 1);
 
-        dbh.addPurchase(cv);
+        return cv;
     }
 
+    void putToDB(){
+        dbh.addPurchase(makeCV());
+        Account account = new Account();
+        account.fetch(dbh.getWritableDatabase(), 1);
+        account.outcome(dbh.getWritableDatabase(), newPrice);
+    }
 
     void editRow(){
-        String pType = nameEdit.getText().toString();
-        int price = Integer.parseInt(priceEdit.getText().toString());
-        String details = detailsEdit.getText().toString();
-        String tempDate = dateEdit.getText().toString();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        Date date = null;
-        try {
-            date = sdf.parse(tempDate);
-        }
-        catch (Exception e) {
-            date = new Date();
-        }
-        SQLiteDatabase db = dbh.getWritableDatabase();
-        ContentValues cv = new ContentValues();
-        if(!pType.equals(oldPName)){
-            Log.i("myinf", "Type has been changed");
-            dbh.decrType("purchasetypes", oldPName);
-            dbh.incrType("purchasetypes",pType);
-        }
-        cv.put("purchasename", pType);
-        cv.put("comment", details);
-        cv.put("date", date.getTime());
-        cv.put("total", price);
-        dbh.updatePurchase(id, cv);
+
+        dbh.updatePurchase(id, makeCV());
+        Account account = new Account();
+        account.fetch(dbh.getWritableDatabase(), 1);
+        account.outcome(dbh.getWritableDatabase(), (-oldPrice + newPrice));
     }
 
     @Override

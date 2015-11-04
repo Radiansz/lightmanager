@@ -160,7 +160,7 @@ public class RuleMakerFragment extends android.support.v4.app.Fragment implement
         rule.setBrandRaw(rawPlaceEdit.getText().toString());
         if(!placeEdit.getText().toString().equals(""))
             rule.setBrand(placeEdit.getText().toString());
-        if(rule.insertInDB(db) != -1){
+        if(rule.insert(db) != -1){
             Purchase pchase = new Purchase();
             pchase.setPurchasename(rule.getType());
             pchase.setPlace(rule.getBrand());

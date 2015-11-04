@@ -15,6 +15,7 @@ import android.util.Log;
 import com.lightsoft.microwave.lightmanager.DBHelper;
 import com.lightsoft.microwave.lightmanager.ListActivity;
 import com.lightsoft.microwave.lightmanager.R;
+import com.lightsoft.microwave.lightmanager.dbworks.Account;
 import com.lightsoft.microwave.lightmanager.dbworks.TypeReplaceRule;
 import com.lightsoft.microwave.lightmanager.dbworks.TypesProvider;
 
@@ -129,8 +130,11 @@ public class SmsHandler extends IntentService {
             cv.put("place", place);
             cv.put("date", new Date().getTime());
             cv.put("comment", original);
-            cv.put("accountid", 0);
+            cv.put("accountid", 1);
             db.insert("purchases", null, cv);
+            Account account = new Account();
+            account.fetch(db, 1);
+            account.outcome(db, sum);
             dbh.close();
         }
         catch(Exception e){

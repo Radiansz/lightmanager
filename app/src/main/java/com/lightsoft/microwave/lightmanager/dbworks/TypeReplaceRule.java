@@ -10,7 +10,6 @@ import android.util.Log;
 public class TypeReplaceRule extends  TableRow {
 
     public static final String TABLE = "type_replace_rules";
-    public static final String ID = "_id";
     public static final String TYPE = "type";
     public static final String BRAND_RAW = "brand_raw";
     public static final String BRAND = "brand";
@@ -24,10 +23,7 @@ public class TypeReplaceRule extends  TableRow {
 
 
 
-    @Override
-    public long insertInDB(SQLiteDatabase db) {
-        return db.insert(TABLE, null, makeContentValues());
-    }
+
 
     @Override
     public long updateMatches(SQLiteDatabase db, TableRow pattern) {
@@ -112,6 +108,11 @@ public class TypeReplaceRule extends  TableRow {
         String[] result = new String[i];
         for(int j = 0; j<i; j++) result[j] = args[j];
         return result;
+    }
+
+    @Override
+    protected String table() {
+        return TABLE;
     }
 
     /**

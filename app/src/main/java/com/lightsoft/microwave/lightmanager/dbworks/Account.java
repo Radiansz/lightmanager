@@ -1,6 +1,7 @@
 package com.lightsoft.microwave.lightmanager.dbworks;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 /**
@@ -9,33 +10,59 @@ import android.database.sqlite.SQLiteDatabase;
 public class Account extends TableRow {
 
     public static final String TABLE = "accounts";
-    public static final String ID = "_id";
     public static final String ACCOUNTTYPE = "accountType";
     public static final String NAME = "name";
     public static final String BALANCE = "balance";
     public static final String CURRENCY = "currency";
     public static final String COMMENT = "comment";
 
-    int id = -1;
     String accountType = null;
     String name = null;
     int balance = -1;
     String currency = null;
     String comment = null;
 
+    public Account(){
 
+    }
 
+    public Account(ContentValues cv){
+        id = cv.getAsInteger(ID);
+        accountType = cv.getAsString(ACCOUNTTYPE);
+        name = cv.getAsString(NAME);
+        currency = cv.getAsString(CURRENCY);
+        balance = cv.getAsInteger(BALANCE);
+    }
 
-    @Override
-    public long insertInDB(SQLiteDatabase db) {
-        return  db.insert(TABLE, null, makeContentValues());
+    public boolean fetch(SQLiteDatabase db, int id) {
+        Cursor c = db.query(TABLE, new String[]{ID, ACCOUNTTYPE, NAME, BALANCE, CURRENCY, COMMENT}, ID + " = ?", new String[]{String.valueOf(id)}, null, null, null);
+        if(c.moveToFirst()) {
+            this.id = id;
+            accountType = c.getString(c.getColumnIndex(ACCOUNTTYPE));
+            name = c.getString(c.getColumnIndex(NAME));
+            currency = c.getString(c.getColumnIndex(CURRENCY));
+            comment = c.getString(c.getColumnIndex(COMMENT));
+            balance = c.getInt(c.getColumnIndex(BALANCE));
+            return true;
+        }
+        return false;
+    }
+
+    public void income(SQLiteDatabase db, int value) {
+        balance += value;
+        update(db);
+    }
+
+    public void outcome(SQLiteDatabase db,int value) {
+        balance -= value;
+        update(db);
     }
 
     @Override
     public long updateMatches(SQLiteDatabase db, TableRow pattern) {
         if(!(pattern instanceof Account))
             return -1;
-        return  db.update(TABLE, makeContentValues(), makeWhere(pattern), makeWhereArgs(pattern) );
+        return  db.update(TABLE, makeContentValues(), makeWhere(pattern), makeWhereArgs(pattern));
 
     }
 
@@ -107,6 +134,11 @@ public class Account extends TableRow {
         else
             args[0] = String.valueOf(id);
         return args;
+    }
+
+    @Override
+    protected String table() {
+        return TABLE;
     }
 
 

@@ -23,6 +23,8 @@ import android.widget.TextView;
 import android.widget.SimpleCursorAdapter;
 import android.util.Log;
 
+import com.lightsoft.microwave.lightmanager.dbworks.Account;
+import com.lightsoft.microwave.lightmanager.dbworks.Purchase;
 import com.lightsoft.microwave.lightmanager.dbworks.PurchaseLoader;
 
 import java.util.Calendar;
@@ -80,45 +82,6 @@ public class ListActivity extends Activity implements AdapterView.OnItemClickLis
         getMenuInflater().inflate(R.menu.menu_list, menu);
         return true;
     }
-
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo){
-        super.onCreateContextMenu(menu, v, menuInfo);
-        menu.add(0,EDIT_ELEM,0,R.string.edit);
-        menu.add(0, DELETE_ELEM, 0, R.string.delete);
-    }
-
-    @Override
-    public boolean onContextItemSelected(MenuItem item){
-        AdapterContextMenuInfo ac = (AdapterContextMenuInfo)item.getMenuInfo();
-        switch(item.getItemId()){
-            case EDIT_ELEM:
-                Intent intent = new Intent("ACTION_LM_EDIT", null, this, NewPurchase.class);
-                intent.putExtra("id", ac.id);
-                startActivity(intent);
-                break;
-            case DELETE_ELEM:
-
-                String pName = dbh.getPurchaseName(ac.id);
-
-                dbh.decrType("purchasetypes", pName);
-                dbh.deletePurchase(ac.id);
-
-                refreshList();
-                refreshCostsSum();
-                break;
-        }
-        return false;
-    }
-    void showAllNotes(Cursor notes, String s){
-        notes.moveToFirst();
-        int ind = notes.getColumnIndex(s), i = 0;
-        Log.i("notesInfo","Note " + i + " = " + notes.getString(ind));
-        while(notes.moveToNext()){
-            i++;
-            Log.i("notesInfo","Note " + i + " = " + notes.getString(ind));
-        }
-    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -142,6 +105,10 @@ public class ListActivity extends Activity implements AdapterView.OnItemClickLis
                 ref = new Intent(this, RuleEditorActivity.class);
                 startActivity(ref);
                 return true;
+            case R.id.accounts:
+                ref = new Intent(this, AccountActivity.class);
+                startActivity(ref);
+                return true;
             case R.id.statistic:
                 ref = new Intent(this, StatisticActivity.class);
                 startActivity(ref);
@@ -151,14 +118,56 @@ public class ListActivity extends Activity implements AdapterView.OnItemClickLis
 
         return super.onOptionsItemSelected(item);
     }
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo){
+        super.onCreateContextMenu(menu, v, menuInfo);
+        menu.add(0,EDIT_ELEM,0,R.string.edit);
+        menu.add(0, DELETE_ELEM, 0, R.string.delete);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item){
+        AdapterContextMenuInfo ac = (AdapterContextMenuInfo)item.getMenuInfo();
+        switch(item.getItemId()){
+            case EDIT_ELEM:
+                Intent intent = new Intent("ACTION_LM_EDIT", null, this, NewPurchase.class);
+                intent.putExtra("id", ac.id);
+                startActivity(intent);
+                break;
+            case DELETE_ELEM:
+
+                String pName = dbh.getPurchaseName(ac.id);
+
+
+                Purchase purchase = new Purchase();
+                purchase.fetch(dbh.getWritableDatabase(), (int) ac.id);
+                Account account = new Account();
+
+                if(account.fetch(dbh.getWritableDatabase(), purchase.getAccountid())) {
+                    Log.i("myinfo", "Deleting...");
+                    account.income(dbh.getWritableDatabase(), purchase.getTotal());
+                }
+                dbh.deletePurchase(ac.id);
+                refreshList();
+                refreshCostsSum();
+                break;
+        }
+        return false;
+    }
+    void showAllNotes(Cursor notes, String s){
+        notes.moveToFirst();
+        int ind = notes.getColumnIndex(s), i = 0;
+        Log.i("notesInfo","Note " + i + " = " + notes.getString(ind));
+        while(notes.moveToNext()){
+            i++;
+            Log.i("notesInfo","Note " + i + " = " + notes.getString(ind));
+        }
+    }
+
 
     // -----------------------------
     void refreshList(){
-        /*Cursor c = dbh.getPurchases();
-        String []from = new String[]{"purchasename", "total"};
-        int []to = {R.id.pe_main, R.id.pe_price};
-        SimpleCursorAdapter adapter = new SimpleCursorAdapter(this, R.layout.purchase_list_elem, c,from, to, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
-        lv.setAdapter(adapter);*/
+        getLoaderManager().initLoader(0,null,this);
     }
 
     void refreshCostsSum(){
@@ -174,8 +183,8 @@ public class ListActivity extends Activity implements AdapterView.OnItemClickLis
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         Loader<Cursor> ldr = null;
-        if( id==0 )
-            ldr = new PurchaseLoader(this, new Date(0), new Date() );
+
+        ldr = new PurchaseLoader(this, new Date(0), new Date() );
         return ldr;
     }
 

@@ -53,9 +53,9 @@ public class StatisticActivity extends Activity implements View.OnClickListener 
         totalText = (TextView) findViewById(R.id.stat_total);
         refreshButton = (Button) findViewById(R.id.stat_refresh);
         refreshButton.setOnClickListener(this);
-        String []from = new String[]{"purchasename", "sum", "extra"};
-        int []to = {R.id.pe_main, R.id.pe_price, R.id.pe_extra};
-        adapter = new SimpleCursorAdapter(this, R.layout.purchase_list_elem, null,from, to, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
+        String []from = new String[]{"purchasename", "sum"};
+        int []to = {R.id.stat_main, R.id.stat_left};
+        adapter = new SimpleCursorAdapter(this, R.layout.purchase_list_elem2, null,from, to, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
         lv.setAdapter(adapter);
         refreshList();
 

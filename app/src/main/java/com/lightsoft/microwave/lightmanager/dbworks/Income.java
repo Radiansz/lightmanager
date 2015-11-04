@@ -12,13 +12,11 @@ public class Income extends TableRow {
 
 
     public static final String TABLE = "income";
-    public static final String ID = "_id";
     public static final String AMOUNT = "amount";
     public static final String DATE = "date";
     public static final String COMMENT = "comment";
     public static final String ACCOUNTID = "accountid";
 
-    int id = -1;
     int amount = -1;
     Date date = null;
     String comment = null;
@@ -26,10 +24,6 @@ public class Income extends TableRow {
 
 
 
-    @Override
-    public long insertInDB(SQLiteDatabase db) {
-        return  db.insert(TABLE, null, makeContentValues());
-    }
 
     @Override
     public long updateMatches(SQLiteDatabase db, TableRow pattern) {
@@ -90,4 +84,10 @@ public class Income extends TableRow {
     protected String[] makeWhereArgs(TableRow pattern) {
         return new String[0];
     }
+
+    @Override
+    protected String table() {
+        return TABLE;
+    }
+
 }

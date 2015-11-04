@@ -58,6 +58,14 @@
             android:name=".StatisticActivity"
             android:label="@string/title_activity_statistic" >
         </activity>
+        <activity
+            android:name=".AccountActivity"
+            android:label="@string/title_activity_account" >
+        </activity>
+        <activity
+            android:name=".AccountEditActivity"
+            android:label="@string/title_activity_account_edit" >
+        </activity>
     </application>
 
 </manifest>

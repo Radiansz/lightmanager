@@ -16,22 +16,23 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="10"
-        android:paddingLeft="10dp">
+        android:paddingLeft="10dp"
+        android:layout_marginLeft="10dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="Large Text"
-            android:id="@+id/pe_main" />
+            android:id="@+id/pe_main"
+            android:layout_marginTop="5dp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Medium Text"
-            android:id="@+id/pe_extra"
-            android:paddingLeft="10dp" />
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Small Text"
+            android:id="@+id/pe_extra" />
 
     </LinearLayout>
 
@@ -47,6 +48,7 @@
         android:clickable="false"
         android:focusable="false"
         android:layout_weight="2"
-        android:layout_columnWeight="1" />
+        android:layout_columnWeight="1"
+        android:layout_marginRight="10dp" />
 
 </LinearLayout>

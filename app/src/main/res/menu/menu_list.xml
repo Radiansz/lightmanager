@@ -10,4 +10,6 @@
         android:orderInCategory="300" android:showAsAction="never" />
     <item android:id="@+id/statistic" android:title="@string/statistic"
         android:orderInCategory="300" android:showAsAction="never" />
+    <item android:id="@+id/accounts" android:title="@string/accounts"
+        android:orderInCategory="300" android:showAsAction="never" />
 </menu>

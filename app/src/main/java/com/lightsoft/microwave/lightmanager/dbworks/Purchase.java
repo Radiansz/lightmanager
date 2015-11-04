@@ -1,6 +1,7 @@
 package com.lightsoft.microwave.lightmanager.dbworks;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import java.util.Date;
@@ -11,7 +12,7 @@ import java.util.Date;
 public class Purchase extends TableRow {
 
     public static final String TABLE = "purchases";
-    public static final String ID = "_id";
+
     public static final String PURCHASENAME = "purchasename";
     public static final String PLACE = "place";
     public static final String TOTAL = "total";
@@ -20,7 +21,7 @@ public class Purchase extends TableRow {
     public static final String COMMENT = "comment";
     public static final String ACCOUNTID = "accountid";
 
-    int id = -1;
+
     String purchasename = null;
     String place = null;
     int total = -1;
@@ -30,11 +31,19 @@ public class Purchase extends TableRow {
     int accountid = -1;
 
 
-
-    @Override
-    public long insertInDB(SQLiteDatabase db) {
-        return  db.insert(TABLE, null, makeContentValues());
+    public void fetch(SQLiteDatabase db, int id) {
+        Cursor c = db.query(TABLE, new String[]{ID, PURCHASENAME, PLACE, TOTAL, CURRENCY, DATE, COMMENT, ACCOUNTID}, ID + " = ?", new String[]{String.valueOf(id)}, null, null, null);
+        if(c.moveToFirst()) {
+            this.id = id;
+            purchasename = c.getString(c.getColumnIndex(PURCHASENAME));
+            place = c.getString(c.getColumnIndex(PLACE));
+            total = c.getInt(c.getColumnIndex(TOTAL));
+            comment = c.getString(c.getColumnIndex(COMMENT));
+            date = new Date(c.getLong(c.getColumnIndex(DATE)));
+            accountid = c.getInt(c.getColumnIndex(ACCOUNTID));
+        }
     }
+
 
     @Override
     public long updateMatches(SQLiteDatabase db, TableRow pattern) {
@@ -119,6 +128,11 @@ public class Purchase extends TableRow {
         for(int j =0; j<i; j++)
             retVal[j] = args[j];
         return retVal;
+    }
+
+    @Override
+    protected String table() {
+        return TABLE;
     }
 
 

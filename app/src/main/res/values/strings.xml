@@ -22,11 +22,14 @@
     <string name="temp_picker">Pick template</string>
     <string name="edit_rules">Edit rules</string>
     <string name="statistic">Statistic</string>
+    <string name="accounts">Accounts</string>
     <string name="title_activity_rules_editor">RulesEditorActivity</string>
     <string name="title_activity_rule_editor">RuleEditorActivity</string>
 
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_statistic">Statistic</string>
+    <string name="title_activity_account">AccountActivity</string>
+    <string name="title_activity_account_edit">AccountEditActivity</string>
 
 </resources>

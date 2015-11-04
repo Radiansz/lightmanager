@@ -31,16 +31,22 @@ public class TypesProvider {
     }
 
     void typeField(){
-        if(typeFamily.equals("purchasetypes"))
-            typeField = "purchasetype";
-        if(typeFamily.equals("goodstypes"))
-            typeField = "goodstype";
+        if(typeFamily.equals("purchasetypes")) {
+            typeFamily = "purchases";
+            typeField = "purchasename";
+            return;
+        }
+        if(typeFamily.equals("goodstypes")) {
+            typeFamily = "goods";
+            typeField = "goodsgroup";
+            return;
+        }
     }
 
     int getCount(String typeName){
         Cursor c = null;
         try{
-            c = db.query(typeFamily,new String[]{ typeField, "count" }, typeField + "= '" + typeName + "'", null, null, null, null);
+            c = db.query(typeFamily,new String[]{ typeField, "count(" + typeField + ")" }, typeField + "= '" + typeName + "'", null, typeField, null, null);
         }
         catch(Exception e){
 
@@ -58,50 +64,29 @@ public class TypesProvider {
             open();
         ArrayList<Type> cont = new ArrayList<Type>();
         Cursor c = null;
-        c = db.query(table ,new String[]{ typeField, "count" }, null, null, null, null, null);
+        c = db.query(typeFamily ,new String[]{ typeField, "count(" + typeField + ") as count" } , null, null, typeField, null, null);
         int typeI = c.getColumnIndex(typeField);
         int countI = c.getColumnIndex("count");
         if(c.moveToFirst()) {
             do {
                 String tempStr = c.getString(typeI);
                 int tempInt = c.getInt(countI);
-                cont.add(new Type(tempStr, tempInt));
+                if(tempStr.equals("Card parsed")) cont.add(new Type(tempStr, tempInt));
             } while (c.moveToNext());
         }
         return cont;
     }
 
     public void incrType(String typeName) {
-        incrType(typeName, 1);
+
     }
 
     public void incrType(String typeName, int val){
-        if(db == null)
-            open();
-        int cnt = getCount(typeName);
-        ContentValues cv = new ContentValues();
-        cv.put(typeField, typeName);
-        if(cnt != 0){
-            cv.put("count", cnt + val);
-            db.update(typeFamily, cv, typeField+"= '" + typeName + "'", null);
-        }
-        else{
-            cv.put("count", val);
-            db.insert(typeFamily, null, cv);
-        }
+
     }
 
     public void decrType(String typeName){
-        if(db == null)
-            open();
-        int cnt = getCount(typeName);
-        ContentValues cv = new ContentValues();
-        cv.put(typeField, typeName);
-        if(cnt != -1){
-            cnt = cnt <= 0 ? 0 : cnt - 1;
-            cv.put("count", cnt++);
-            db.update(typeFamily, cv, typeField +"= '" + typeName + "'", null);
-        }
+
 
     }
 

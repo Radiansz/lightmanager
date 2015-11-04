@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 public class Product extends TableRow {
 
     public static final String TABLE = "goods";
-    public static final String ID = "_id";
+
     public static final String GROUP = "goodsgroup";
     public static final String BRAND = "brand";
     public static final String PRICE = "price";
@@ -17,7 +17,7 @@ public class Product extends TableRow {
     public static final String COMMENT = "comment";
     public static final String PURCHASEID = "purchaseid";
 
-    int id;
+
     String group;
     String brand;
     int price;
@@ -28,10 +28,6 @@ public class Product extends TableRow {
 
 
 
-    @Override
-    public long insertInDB(SQLiteDatabase db) {
-        return  db.insert(TABLE, null, makeContentValues());
-    }
 
     @Override
     public long updateMatches(SQLiteDatabase db, TableRow pattern) {
@@ -111,6 +107,11 @@ public class Product extends TableRow {
         else
             args[0] = String.valueOf(id);
         return args;
+    }
+
+    @Override
+    protected String table() {
+        return TABLE;
     }
 
 
